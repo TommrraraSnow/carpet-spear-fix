@@ -9,17 +9,17 @@ own the long-term fix after upstream acceptance.
 
 ## 当前状态
 
-The 1.21.11 release, baseline comparison, full runtime regression, and upstream
-PR are complete. The shared-source 26.2 target builds successfully and its
-production JAR passes a dedicated-server multi-target smoke test. CI and the
-v1.1.0 dual-artifact publication are the remaining release steps. Upstream CI
-is waiting for a Carpet maintainer to approve the first-time fork workflow.
+The 1.21.11 baseline comparison and full runtime regression are complete.
+Release v1.1.0 now publishes independent 1.21.11 and 26.2 artifacts from the
+shared behavior source; both matrix builds, release metadata checks, downloaded
+checksums, and the downloaded 26.2 JAR runtime smoke pass. Upstream PR #2209 is
+open, and its CI is waiting for a Carpet maintainer to approve the first-time
+fork workflow.
 
 ## 下一步
 
-Publish v1.1.0 with separate 1.21.11 and 26.2 JARs, verify both release assets
-and checksums, then track PR #2209 for workflow approval and maintainer review.
-Retire each patch artifact after an equivalent Carpet release exists.
+Track PR #2209 for workflow approval and maintainer review. Retire each patch
+artifact after an equivalent Carpet release exists.
 
 ## P0
 

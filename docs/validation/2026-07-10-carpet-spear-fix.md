@@ -104,8 +104,20 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
 
 - v1.0.0 patch CI passed:
   `https://github.com/TommrraraSnow/carpet-spear-fix/actions/runs/29079261278`.
-- v1.1.0 matrix CI, tagged release, downloaded-asset checksums, and remote
-  metadata inspection are pending.
+- v1.1.0 Java 21/25 matrix builds, artifact metadata checks, and release job
+  passed in run
+  `https://github.com/TommrraraSnow/carpet-spear-fix/actions/runs/29081375169`.
+- The public release contains exactly two JARs and `SHA256SUMS`:
+  `https://github.com/TommrraraSnow/carpet-spear-fix/releases/tag/v1.1.0`.
+- Freshly downloaded assets passed `sha256sum --check SHA256SUMS`. Released JAR
+  SHA-256 values are
+  `ee23e7dd40dc4f072da51a917049a3da6b834b7347f2a8ae9f7a07e3f4e18525`
+  for 1.21.11 and
+  `20abd7f2a5ab3225d2e8bdb2c2e3103dd53df0a3c990fb1ecf97926ce2dab0e2`
+  for 26.2.
+- The downloaded 26.2 release JAR was substituted into the independent server;
+  Loader and Mixin initialized cleanly, the spear case produced `16.0 / 16.0`,
+  and the server exited normally.
 - Carpet PR CI is `action_required` with no jobs because a maintainer must
   approve workflows from this first-time fork. This is an external approval
   gate, not a failed build.
