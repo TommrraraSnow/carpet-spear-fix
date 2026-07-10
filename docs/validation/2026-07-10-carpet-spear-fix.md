@@ -143,6 +143,8 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
 - 26.1.2 final log and command record: ignored local files
   `/tmp/carpet-26.1.2-runtime/logs/latest.log` and
   `/tmp/carpet-26.1.2-runtime/VALIDATION.md`
+- Downloaded 26.1.2 release-JAR log: ignored local file
+  `/tmp/carpet-26.1.2-release-runtime/logs/latest.log`
 - Local artifacts: `build/libs/`
 
 ## Remote verification
@@ -163,8 +165,24 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
 - The downloaded 26.2 release JAR was substituted into the independent server;
   Loader and Mixin initialized cleanly, the spear case produced `16.0 / 16.0`,
   and the server exited normally.
-- v1.2.0 matrix CI, tagged release, public checksum verification, and
-  downloaded-release runtime smoke are pending.
+- v1.2.0 main matrix run `29084550084` and tag/release run `29084644561`
+  passed all five exact targets.
+- The public v1.2.0 release contains exactly five JARs and `SHA256SUMS`:
+  `https://github.com/TommrraraSnow/carpet-spear-fix/releases/tag/v1.2.0`.
+- Fresh downloads passed `sha256sum --check SHA256SUMS` and embedded metadata
+  inspection. Released SHA-256 values are:
+  `fd2240dd968ad347ab08fcd153b231090555d98b140c7eadba2b163823647f9d`
+  (1.21.11),
+  `c41856e0d8ce6dfaab21f6166c3b542df96a0f5c72a4d644d571e3fdfff73c25`
+  (26.1),
+  `0115428479fbee25d4f009a6b6c64f6d7bded8953d95a456e929a867d0995268`
+  (26.1.1),
+  `62b4235a85e6b39f3a70a25aaf165c92879fd7a4ffba49ed731b5c2d0b9196ee`
+  (26.1.2), and
+  `9abbf140e91bf680bb1803ac7a1474d1d64d1342a5f7bb8e73d172ad9b0df4ef`
+  (26.2).
+- The downloaded 26.1.2 JAR loaded with the exact Loader 0.18.4 contract,
+  produced `16.0 / 16.0`, and stopped cleanly with exit status 0.
 - Carpet PR CI is `action_required` with no jobs because a maintainer must
   approve workflows from this first-time fork. This is an external approval
   gate, not a failed build.
