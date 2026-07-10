@@ -10,16 +10,98 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - minecraft: "1.21.11"
+            project: mc1_21_11
+            project_dir: versions/1.21.11
+            java: "21"
+          - minecraft: "26.2"
+            project: mc26_2
+            project_dir: versions/26.2
+            java: "25"
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "21"
-          cache: gradle
+          java-version: ${{ matrix.java }}
       - uses: gradle/actions/setup-gradle@v6
-      - run: ./gradlew build
+      - run: ./gradlew :${{ matrix.project }}:build
       - uses: actions/upload-artifact@v7
         with:
-          name: carpet-spear-fix
-          path: build/libs/*.jar
+          name: binary-mc${{ matrix.minecraft }}
+          if-no-files-found: error
+          path: |
+            ${{ matrix.project_dir }}/build/libs/carpet-spear-fix-*.jar
+            !${{ matrix.project_dir }}/build/libs/*-sources.jar
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: binary-*
+          path: dist
+          merge-multiple: true
+      - name: Validate release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          test "$GITHUB_REF_NAME" = "v$version"
+
+          expected_legacy="dist/carpet-spear-fix-$version+mc1.21.11.jar"
+          expected_26_2="dist/carpet-spear-fix-$version+mc26.2.jar"
+          test -f "$expected_legacy"
+          test -f "$expected_26_2"
+          test "$(find dist -maxdepth 1 -type f -name '*.jar' | wc -l)" -eq 2
+
+          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.minecraft')" = "1.21.11"
+          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.minecraft')" = "26.2"
+          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.version')" = "$version+mc1.21.11"
+          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.version')" = "$version+mc26.2"
+          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.fabricloader')" = ">=0.18.2"
+          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.fabricloader')" = ">=0.19.3"
+          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.java')" = ">=21"
+          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.java')" = ">=25"
+          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.carpet')" = ">=1.4.194 <1.4.195"
+          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.carpet')" = "26.2"
+          test "$(unzip -p "$expected_legacy" carpet-spear-fix.mixins.json | jq -r '.compatibilityLevel')" = "JAVA_21"
+          test "$(unzip -p "$expected_26_2" carpet-spear-fix.mixins.json | jq -r '.compatibilityLevel')" = "JAVA_25"
+
+          (cd dist && sha256sum *.jar > SHA256SUMS)
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            mkdir existing
+            gh release download "$GITHUB_REF_NAME" \
+              --pattern '*.jar' \
+              --pattern 'SHA256SUMS' \
+              --dir existing
+            test "$(find existing -maxdepth 1 -type f | wc -l)" -eq 3
+            (cd existing && sha256sum --check SHA256SUMS)
+            for file in dist/*.jar dist/SHA256SUMS; do
+              cmp "$file" "existing/$(basename "$file")"
+            done
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.jar dist/SHA256SUMS \
+              --title "Carpet Spear Fix ${GITHUB_REF_NAME#v}" \
+              --verify-tag \
+              --notes 'Install exactly one JAR matching the server Minecraft version; do not install both artifacts.' \
+              --generate-notes
+          fi

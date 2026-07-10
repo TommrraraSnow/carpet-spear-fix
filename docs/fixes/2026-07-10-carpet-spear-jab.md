@@ -8,7 +8,8 @@ select thin blocks instead of performing the vanilla Jab line attack.
 ## Impact
 
 Fake-player spear farms diverge from real-player behavior, including the cases
-reported in Fabric Carpet issues #2150 and #2163.
+reported in Fabric Carpet issues #2150 and #2163. The defect is present in the
+supported Carpet 1.4.194 and 26.2 releases.
 
 ## Root cause
 

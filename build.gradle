@@ -1,61 +1,139 @@
 plugins {
-    id "fabric-loom" version "${loom_version}"
-    id "maven-publish"
+    id "base"
+    id "net.fabricmc.fabric-loom-remap" version "${loom_version}" apply false
+    id "net.fabricmc.fabric-loom" version "${loom_version}" apply false
 }
 
-version = "${mod_version}+mc${minecraft_version}"
-group = project.maven_group
+def targets = [
+        mc1_21_11: [
+                minecraft: "1.21.11",
+                loader: "0.18.2",
+                carpet: "1.4.194",
+                java: 21,
+                mappings: true,
+                minecraftRequirement: "1.21.11",
+                carpetRequirement: ">=1.4.194 <1.4.195",
+                mixinCompatibility: "JAVA_21"
+        ],
+        mc26_2: [
+                minecraft: "26.2",
+                loader: "0.19.3",
+                carpet: "26.2",
+                java: 25,
+                mappings: false,
+                minecraftRequirement: "26.2",
+                carpetRequirement: "26.2",
+                mixinCompatibility: "JAVA_25"
+        ]
+]
 
-base {
-    archivesName = project.archives_base_name
-}
+subprojects {
+    def target = targets[project.name]
+    apply plugin: target.mappings ? "net.fabricmc.fabric-loom-remap" : "net.fabricmc.fabric-loom"
+    apply plugin: "maven-publish"
 
-repositories {
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
+    version = "${rootProject.mod_version}+mc${target.minecraft}"
+    group = rootProject.maven_group
+
+    base {
+        archivesName = rootProject.archives_base_name
+    }
+
+    repositories {
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${target.minecraft}"
+        if (target.mappings) {
+            mappings loom.officialMojangMappings()
+        }
+
+        def modConfiguration = target.mappings ? "modImplementation" : "implementation"
+        add(modConfiguration, "net.fabricmc:fabric-loader:${target.loader}")
+        add(modConfiguration, "maven.modrinth:carpet:${target.carpet}")
+    }
+
+    sourceSets {
+        main {
+            java.setSrcDirs([rootProject.file("src/main/java")])
+            resources.setSrcDirs([rootProject.file("src/main/resources")])
+        }
+    }
+
+    def expandedVersion = version.toString()
+    processResources {
+        inputs.properties(
+                version: expandedVersion,
+                loader_requirement: target.loader,
+                minecraft_requirement: target.minecraftRequirement,
+                java_version: target.java,
+                carpet_requirement: target.carpetRequirement,
+                mixin_compatibility: target.mixinCompatibility
+        )
+
+        filesMatching("fabric.mod.json") {
+            expand(
+                    version: expandedVersion,
+                    loader_requirement: target.loader,
+                    minecraft_requirement: target.minecraftRequirement,
+                    java_version: target.java,
+                    carpet_requirement: target.carpetRequirement
+            )
+        }
+        filesMatching("carpet-spear-fix.mixins.json") {
+            expand(mixin_compatibility: target.mixinCompatibility)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release = target.java
+    }
+
+    java {
+        withSourcesJar()
+        sourceCompatibility = JavaVersion.toVersion(target.java)
+        targetCompatibility = JavaVersion.toVersion(target.java)
+    }
+
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${rootProject.archives_base_name}" }
+        }
+    }
+
+    publishing {
+        publications {
+            create("mavenJava", MavenPublication) {
+                from components.java
+            }
         }
     }
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "maven.modrinth:carpet:${carpet_version}"
-}
+def targetBuilds = subprojects.collect { it.tasks.named("build") }
+def targetCleans = subprojects.collect { it.tasks.named("clean") }
 
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+tasks.register("collectArtifacts", Sync) {
+    dependsOn targetBuilds
+    from(subprojects.collect { it.layout.buildDirectory.dir("libs") }) {
+        include "*.jar"
+        exclude "*-sources.jar"
     }
+    into layout.buildDirectory.dir("libs")
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.release = 21
+tasks.named("build") {
+    dependsOn tasks.named("collectArtifacts")
 }
 
-java {
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archives_base_name}" }
-    }
-}
-
-publishing {
-    publications {
-        create("mavenJava", MavenPublication) {
-            from components.java
-        }
-    }
+tasks.named("clean") {
+    dependsOn targetCleans
 }

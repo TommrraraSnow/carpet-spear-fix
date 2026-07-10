@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "io.github.tommrrarasnow.carpetspearfix.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "${mixin_compatibility}",
   "mixins": [
     "ActionAccessor",
     "AttackActionMixin"

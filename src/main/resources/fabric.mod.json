@@ -17,9 +17,9 @@
     "carpet-spear-fix.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.18.2",
-    "java": ">=21",
-    "minecraft": "1.21.11",
-    "carpet": ">=1.4.194 <1.4.195"
+    "fabricloader": ">=${loader_requirement}",
+    "java": ">=${java_version}",
+    "minecraft": "${minecraft_requirement}",
+    "carpet": "${carpet_requirement}"
   }
 }
