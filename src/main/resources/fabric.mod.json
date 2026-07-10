@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "carpet_spear_fix",
+  "version": "${version}",
+  "name": "Carpet Spear Fix",
+  "description": "Restores vanilla piercing spear attacks for Carpet-controlled players.",
+  "authors": [
+    "TommrraraSnow"
+  ],
+  "contact": {
+    "sources": "https://github.com/TommrraraSnow/carpet-spear-fix",
+    "issues": "https://github.com/TommrraraSnow/carpet-spear-fix/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "mixins": [
+    "carpet-spear-fix.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.2",
+    "java": ">=21",
+    "minecraft": "1.21.11",
+    "carpet": ">=1.4.194 <1.4.195"
+  }
+}
