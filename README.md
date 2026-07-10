@@ -5,6 +5,8 @@ A temporary server-side Fabric patch for
 It restores the vanilla multi-entity Jab attack when a Carpet-controlled player
 uses a spear through `/player <name> attack`.
 
+[Download Carpet Spear Fix 1.0.0](https://github.com/TommrraraSnow/carpet-spear-fix/releases/tag/v1.0.0)
+
 ## Compatibility
 
 - Minecraft 1.21.11
@@ -43,5 +45,6 @@ The remapped mod JAR is written to `build/libs/`.
 
 ## Upstream
 
-The same behavior is intended for an upstream Fabric Carpet pull request. This
-repository remains narrowly scoped as an installable bridge for 1.21.11.
+The equivalent source fix is proposed in
+[Fabric Carpet PR #2209](https://github.com/gnembon/fabric-carpet/pull/2209).
+This repository remains narrowly scoped as an installable bridge for 1.21.11.

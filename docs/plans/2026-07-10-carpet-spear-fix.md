@@ -10,13 +10,15 @@ own the long-term fix after upstream acceptance.
 ## 当前状态
 
 Implementation, local builds, baseline comparison, development runtime smoke,
-and production-JAR runtime smoke are complete. Publication, PR submission, and
-hosted CI verification remain.
+production-JAR runtime smoke, patch publication, and upstream PR submission are
+complete. The patch CI is green. Upstream CI is waiting for a Carpet maintainer
+to approve the first-time fork workflow.
 
 ## 下一步
 
-Publish the patch repository and release, submit the Fabric Carpet PR, then
-record both CI results and maintainer feedback.
+Track PR #2209 for workflow approval and maintainer review. If requested, move
+the accepted change to maintained release branches and retire this patch after
+an upstream release.
 
 ## P0
 

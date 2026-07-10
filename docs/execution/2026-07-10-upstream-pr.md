@@ -12,17 +12,25 @@ source change.
 
 ## Steps
 
-1. Build and runtime-test the 1.21.11 patch against Carpet 1.4.194.
-2. Create `TommrraraSnow/carpet-spear-fix` and publish release `v1.0.0`.
-3. Fork `gnembon/fabric-carpet` and push
+1. Built and runtime-tested the 1.21.11 patch against Carpet 1.4.194.
+2. Created `TommrraraSnow/carpet-spear-fix` and published release `v1.0.0`.
+3. Forked `gnembon/fabric-carpet` and pushed
    `fix/piercing-weapon-player-attack`.
-4. Open a pull request against Carpet master linking issues #2150 and #2163.
-5. Verify both repositories' GitHub Actions results.
+4. Opened pull request #2209 against Carpet master, linking #2150 and #2163.
+5. Verified patch CI and inspected the upstream workflow gate.
 
 ## Result
 
-Local implementation and runtime validation are complete. Repository, release,
-pull request, and CI fields will be filled after publication.
+- Patch repository:
+  `https://github.com/TommrraraSnow/carpet-spear-fix`
+- Release:
+  `https://github.com/TommrraraSnow/carpet-spear-fix/releases/tag/v1.0.0`
+- Release JAR SHA-256:
+  `9ca105635881c2177be5ee9aa564a4aaeaa6097f3c191df5f64172f1123aaaa8`
+- Patch CI: success, run `29079261278`
+- Upstream PR: `https://github.com/gnembon/fabric-carpet/pull/2209`
+- Upstream PR CI: `action_required`; a maintainer must approve the forked
+  workflow before jobs can start.
 
 ## Rollback
 

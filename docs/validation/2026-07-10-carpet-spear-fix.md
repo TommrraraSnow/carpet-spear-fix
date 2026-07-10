@@ -54,6 +54,9 @@ the official Carpet 1.4.194 release. Fabric Loader listed both mods, applied the
 Mixin without warnings, and the Diamond Spear case again produced
 `16.0 / 16.0`.
 
+The development server also started successfully with the declared minimum
+Fabric Loader 0.18.2.
+
 ## Evidence
 
 - Development server log: ignored local file `run/logs/latest.log`
@@ -63,7 +66,11 @@ Mixin without warnings, and the Diamond Spear case again produced
 
 ## Remaining risk
 
-- GitHub Actions remains to be verified after the repository is pushed.
+- Patch CI passed:
+  `https://github.com/TommrraraSnow/carpet-spear-fix/actions/runs/29079261278`.
+- Carpet PR CI is `action_required` with no jobs because a maintainer must
+  approve workflows from this first-time fork. This is an external approval
+  gate, not a failed build.
 - Durability per target, lunge, sounds, knockback, and mounted-target dismount
   were delegated to the vanilla component but not separately observed here.
 - Vanilla STAB does not pass through `Player.attack(Entity)`, so Scarpet's
