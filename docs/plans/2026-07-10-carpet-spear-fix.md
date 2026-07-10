@@ -12,16 +12,16 @@ own the long-term fix after upstream acceptance.
 The 1.21.11 baseline comparison and full runtime regression are complete.
 Release v1.1.0 publishes independent 1.21.11 and 26.2 artifacts from the shared
 behavior source. Exact 26.1, 26.1.1, and 26.1.2 targets now build locally with
-their verified Loader, Java, namespace, Carpet, and bytecode contracts. All
-three final candidates pass production-server runtime validation; v1.2.0 CI
-and publication remain. Upstream PR #2209 is open, and its CI is waiting for a
-Carpet maintainer to approve the first-time fork workflow.
+their verified Loader, Java, namespace, Carpet, and bytecode contracts. Release
+v1.2.0 publishes all five exact artifacts; matrix CI, public checksums,
+downloaded metadata, and the downloaded 26.1.2 runtime smoke pass. Upstream PR
+#2209 is open, and its CI is waiting for a Carpet maintainer to approve the
+first-time fork workflow.
 
 ## 下一步
 
-Publish and re-download v1.2.0, verify its public assets and one released 26.1.x
-JAR at runtime, then continue tracking PR #2209. Retire each patch artifact
-after an equivalent Carpet release exists.
+Continue tracking PR #2209 for workflow approval and maintainer review. Retire
+each patch artifact after an equivalent Carpet release exists.
 
 ## P0
 
