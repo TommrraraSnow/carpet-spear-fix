@@ -22,15 +22,26 @@ artifact as v1.1.0.
 4. Started an independent production-style Fabric server with the 26.2 runtime
    JAR and official Carpet release.
 5. Ran the aligned two-Creeper spear Jab smoke test.
-6. Configure CI to build each target on its exact JDK and tagged builds to
+6. Configured CI to build each target on its exact JDK and tagged builds to
    publish both binaries plus `SHA256SUMS`.
+7. Merged patch PR #1, tagged v1.1.0, and observed release workflow run
+   `29081375169` complete successfully.
+8. Downloaded all public release assets, verified `SHA256SUMS` and embedded
+   metadata, then repeated the 26.2 aligned-Creeper smoke with the downloaded
+   JAR.
 
-## Current result
+## Result
 
-The candidate 26.2 JAR loads without Mixin errors and one
+- Release: `https://github.com/TommrraraSnow/carpet-spear-fix/releases/tag/v1.1.0`
+- CI: `https://github.com/TommrraraSnow/carpet-spear-fix/actions/runs/29081375169`
+- 1.21.11 JAR SHA-256:
+  `ee23e7dd40dc4f072da51a917049a3da6b834b7347f2a8ae9f7a07e3f4e18525`
+- 26.2 JAR SHA-256:
+  `20abd7f2a5ab3225d2e8bdb2c2e3103dd53df0a3c990fb1ecf97926ce2dab0e2`
+
+The downloaded 26.2 JAR loads without Mixin errors and one
 `/player SpearBot attack once` damages both aligned Creepers from `20.0` to
-`16.0`. Local dual-target builds and artifact inspections pass. GitHub CI and
-release publication are pending.
+`16.0`. The server then stops cleanly with exit status 0.
 
 ## Rollback
 
@@ -39,5 +50,5 @@ release remains available for the original 1.21.11 deployment.
 
 ## Follow-up
 
-Record the v1.1.0 CI run, release URL, final SHA-256 values, and remote asset
-inspection after publication.
+Track upstream PR #2209 and retire the matching patch artifact once Carpet
+publishes an equivalent fix for that release line.
