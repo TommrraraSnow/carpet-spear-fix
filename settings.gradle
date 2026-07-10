@@ -10,6 +10,9 @@ pluginManagement {
 
 rootProject.name = "carpet-spear-fix"
 
-include("mc1_21_11", "mc26_2")
+include("mc1_21_11", "mc26_1", "mc26_1_1", "mc26_1_2", "mc26_2")
 project(":mc1_21_11").projectDir = file("versions/1.21.11")
+project(":mc26_1").projectDir = file("versions/26.1")
+project(":mc26_1_1").projectDir = file("versions/26.1.1")
+project(":mc26_1_2").projectDir = file("versions/26.1.2")
 project(":mc26_2").projectDir = file("versions/26.2")

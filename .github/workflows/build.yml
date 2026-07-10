@@ -18,6 +18,18 @@ jobs:
             project: mc1_21_11
             project_dir: versions/1.21.11
             java: "21"
+          - minecraft: "26.1"
+            project: mc26_1
+            project_dir: versions/26.1
+            java: "25"
+          - minecraft: "26.1.1"
+            project: mc26_1_1
+            project_dir: versions/26.1.1
+            java: "25"
+          - minecraft: "26.1.2"
+            project: mc26_1_2
+            project_dir: versions/26.1.2
+            java: "25"
           - minecraft: "26.2"
             project: mc26_2
             project_dir: versions/26.2
@@ -61,24 +73,26 @@ jobs:
           version="$(sed -n 's/^mod_version=//p' gradle.properties)"
           test "$GITHUB_REF_NAME" = "v$version"
 
-          expected_legacy="dist/carpet-spear-fix-$version+mc1.21.11.jar"
-          expected_26_2="dist/carpet-spear-fix-$version+mc26.2.jar"
-          test -f "$expected_legacy"
-          test -f "$expected_26_2"
-          test "$(find dist -maxdepth 1 -type f -name '*.jar' | wc -l)" -eq 2
+          expected_count=0
+          while IFS='|' read -r minecraft loader java carpet mixin; do
+            artifact="dist/carpet-spear-fix-$version+mc$minecraft.jar"
+            test -f "$artifact"
+            test "$(unzip -p "$artifact" fabric.mod.json | jq -r '.depends.minecraft')" = "$minecraft"
+            test "$(unzip -p "$artifact" fabric.mod.json | jq -r '.version')" = "$version+mc$minecraft"
+            test "$(unzip -p "$artifact" fabric.mod.json | jq -r '.depends.fabricloader')" = "$loader"
+            test "$(unzip -p "$artifact" fabric.mod.json | jq -r '.depends.java')" = "$java"
+            test "$(unzip -p "$artifact" fabric.mod.json | jq -r '.depends.carpet')" = "$carpet"
+            test "$(unzip -p "$artifact" carpet-spear-fix.mixins.json | jq -r '.compatibilityLevel')" = "$mixin"
+            expected_count=$((expected_count + 1))
+          done <<'TARGETS'
+          1.21.11|>=0.18.2|>=21|>=1.4.194 <1.4.195|JAVA_21
+          26.1|>=0.18.4|>=25|26.1|JAVA_17
+          26.1.1|>=0.18.4|>=25|26.1|JAVA_17
+          26.1.2|>=0.18.4|>=25|26.1|JAVA_17
+          26.2|>=0.19.3|>=25|26.2|JAVA_25
+          TARGETS
 
-          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.minecraft')" = "1.21.11"
-          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.minecraft')" = "26.2"
-          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.version')" = "$version+mc1.21.11"
-          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.version')" = "$version+mc26.2"
-          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.fabricloader')" = ">=0.18.2"
-          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.fabricloader')" = ">=0.19.3"
-          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.java')" = ">=21"
-          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.java')" = ">=25"
-          test "$(unzip -p "$expected_legacy" fabric.mod.json | jq -r '.depends.carpet')" = ">=1.4.194 <1.4.195"
-          test "$(unzip -p "$expected_26_2" fabric.mod.json | jq -r '.depends.carpet')" = "26.2"
-          test "$(unzip -p "$expected_legacy" carpet-spear-fix.mixins.json | jq -r '.compatibilityLevel')" = "JAVA_21"
-          test "$(unzip -p "$expected_26_2" carpet-spear-fix.mixins.json | jq -r '.compatibilityLevel')" = "JAVA_25"
+          test "$(find dist -maxdepth 1 -type f -name '*.jar' | wc -l)" -eq "$expected_count"
 
           (cd dist && sha256sum *.jar > SHA256SUMS)
       - name: Publish GitHub release
@@ -93,7 +107,7 @@ jobs:
               --pattern '*.jar' \
               --pattern 'SHA256SUMS' \
               --dir existing
-            test "$(find existing -maxdepth 1 -type f | wc -l)" -eq 3
+            test "$(find existing -maxdepth 1 -type f | wc -l)" -eq "$(find dist -maxdepth 1 -type f | wc -l)"
             (cd existing && sha256sum --check SHA256SUMS)
             for file in dist/*.jar dist/SHA256SUMS; do
               cmp "$file" "existing/$(basename "$file")"
@@ -102,6 +116,6 @@ jobs:
             gh release create "$GITHUB_REF_NAME" dist/*.jar dist/SHA256SUMS \
               --title "Carpet Spear Fix ${GITHUB_REF_NAME#v}" \
               --verify-tag \
-              --notes 'Install exactly one JAR matching the server Minecraft version; do not install both artifacts.' \
+              --notes 'Install exactly one JAR matching the server Minecraft version; do not install multiple artifacts.' \
               --generate-notes
           fi
