@@ -19,6 +19,9 @@ block ray trace.
 | Minecraft | Carpet | Loader | Java | Distribution namespace |
 | --- | --- | --- | --- | --- |
 | 1.21.11 | 1.4.194 | 0.18.2+ | 21+ | Fabric intermediary-remapped |
+| 26.1 | 26.1 | 0.18.4+ | 25+ | Mojang official, no remap |
+| 26.1.1 | 26.1 | 0.18.4+ | 25+ | Mojang official, no remap |
+| 26.1.2 | 26.1 | 0.18.4+ | 25+ | Mojang official, no remap |
 | 26.2 | 26.2 | 0.19.3+ | 25+ | Mojang official, no remap |
 
 The Java and resource sources are shared. Each row has independent dependency,

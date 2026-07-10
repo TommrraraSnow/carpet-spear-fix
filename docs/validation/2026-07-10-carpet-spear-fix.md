@@ -7,6 +7,9 @@ Date: 2026-07-10
 | Target | Carpet | Loader | Java used | Expected class major |
 | --- | --- | --- | --- | --- |
 | Minecraft 1.21.11 | 1.4.194 | 0.18.2 | 21.0.8 | 65 |
+| Minecraft 26.1 | 26.1+v260402 | 0.18.4 | 25.0.3 | 69 |
+| Minecraft 26.1.1 | 26.1+v260402 | 0.18.4 | 25.0.3 | 69 |
+| Minecraft 26.1.2 | 26.1+v260402 | 0.18.4 | 25.0.3 | 69 |
 | Minecraft 26.2 | 26.2+v260616 | 0.19.3 | 25.0.3 | 69 |
 
 Commands:
@@ -14,22 +17,30 @@ Commands:
 ```bash
 JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@25 ./gradlew clean build --warning-mode all
 JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@21 ./gradlew :mc1_21_11:clean :mc1_21_11:build
+JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@25 ./gradlew :mc26_1:build :mc26_1_1:build :mc26_1_2:build
 JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@25 ./gradlew :mc26_2:clean :mc26_2:build
 sha256sum build/libs/*.jar
 ```
 
-All three builds completed with `BUILD SUCCESSFUL`. The local release
-candidates are:
+The aggregate build and exact-JDK target builds completed with
+`BUILD SUCCESSFUL`. The local release candidates are:
 
 | Artifact | Local SHA-256 |
 | --- | --- |
-| `carpet-spear-fix-1.1.0+mc1.21.11.jar` | `bc8d5b377059e71b1aa83e0bac4401d3d54cb1b741e5efb013d44e214e48c096` |
-| `carpet-spear-fix-1.1.0+mc26.2.jar` | `0dc8f138a96393922b2510d2105ec5be00e029db3fae5ef85daf96abfc48ac73` |
+| `carpet-spear-fix-1.2.0+mc1.21.11.jar` | `fe97a0514382b979521650fe982933dce7ce26510be6ef19f3e1e29e71b5f927` |
+| `carpet-spear-fix-1.2.0+mc26.1.jar` | `5aeebb410ad32723dbd2910c4fbb1847dd7d46c7307dc2df97f4d4eb5fda1026` |
+| `carpet-spear-fix-1.2.0+mc26.1.1.jar` | `e8ffc352296145522b78c29d42c5e955967de9579fde648b5900349b4817bbd6` |
+| `carpet-spear-fix-1.2.0+mc26.1.2.jar` | `b8e27fcb3f5db92dfd329474786f736496549b2e034883e1092c99ce8f31fc3d` |
+| `carpet-spear-fix-1.2.0+mc26.2.jar` | `6b5e698e9c070dfb70cdaaeb723fef3da5d33e2e29cc2a2301980cdbf0f9ff32` |
 
 The 1.21.11 JAR contains intermediary-remapped Minecraft references,
-`JAVA_21` Mixin metadata, and class major 65. The 26.2 JAR retains the official
-Mojang runtime names, contains `JAVA_25` Mixin metadata, and has class major 69.
-Both embedded dependency manifests match their declared Carpet, Loader, Java,
+`JAVA_21` Mixin metadata, and class major 65. All calendar-version JARs retain
+official Mojang runtime names and have class major 69. The three 26.1.x builds
+produce an identical `AttackActionMixin.class` SHA-256
+`b97f8964990f2e90698d12bdd9abb127a41a0f5308785996cd3cb987383106e1`.
+They use `JAVA_17` Mixin feature compatibility with a Java 25 runtime contract,
+matching Carpet 26.1 and avoiding Loader 0.18.4's unsupported-level warning.
+Every embedded dependency manifest matches its declared Carpet, Loader, Java,
 and exact Minecraft target.
 
 The immutable v1.0.0 JAR remains
@@ -70,6 +81,33 @@ applied the Mixin without warnings, and the Diamond Spear case again produced
 `16.0 / 16.0`. The development server started successfully with the declared
 minimum Fabric Loader 0.18.2.
 
+## Minecraft 26.1.x production-JAR runtime
+
+Independent Fabric server launcher 1.1.1 instances ran each exact candidate on
+Minecraft 26.1, 26.1.1, or 26.1.2 with official Carpet 26.1, Loader 0.18.4,
+and Java 25.0.3. A 26.1 baseline without the patch reproduced the defect as a
+single damaged target.
+
+| Target and case | Expected | Actual |
+| --- | --- | --- |
+| 26.1 without patch, Diamond Spear | Single target only | `16.0 / 20.0` |
+| 26.1 with patch, Diamond Spear | Both targets | `16.0 / 16.0` |
+| 26.1 with three-block-high stone wall | Neither target | `20.0 / 20.0` |
+| 26.1 `attack continuous` for over 10 seconds | No repeated Jab | `20.0 / 20.0` |
+| 26.1 Diamond Sword | Single target only | `13.0 / 20.0` |
+| 26.1 pressure plate in path | Both targets | `16.0 / 16.0` |
+| 26.1 Diamond Pickaxe | Existing block breaking | `BLOCK_BREAK_OK_FINAL` |
+| 26.1.1 with patch, Diamond Spear | Both targets | `16.0 / 16.0` |
+| 26.1.2 with patch, Diamond Spear | Both targets | `16.0 / 16.0` |
+| 26.1.2 with three-block-high stone wall | Neither target | `20.0 / 20.0` |
+| 26.1.2 `attack continuous` for 342 ticks | No repeated Jab | `20.0 / 20.0` |
+| 26.1.2 Diamond Sword | Single target only | `13.0 / 20.0` |
+
+Each final candidate loaded with only `Compatibility level set to JAVA_17`;
+there were no Mixin compatibility warnings or injection errors. All baseline
+and patched servers stopped through the console with exit status 0 and released
+their configured ports.
+
 ## Minecraft 26.2 production-JAR runtime
 
 An independent Fabric server launcher 1.1.1 instance loaded the current root
@@ -98,6 +136,13 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
   `build/runtime-server/logs/latest.log`
 - 26.2 production log: ignored local file
   `/tmp/carpet-26.2-validation/standalone/logs/latest.log`
+- 26.1 baseline and final logs: ignored local files under
+  `/tmp/carpet-26.1-runtime/`
+- 26.1.1 final log: ignored local file
+  `/tmp/carpet-26.1.1-runtime/logs/latest.log`
+- 26.1.2 final log and command record: ignored local files
+  `/tmp/carpet-26.1.2-runtime/logs/latest.log` and
+  `/tmp/carpet-26.1.2-runtime/VALIDATION.md`
 - Local artifacts: `build/libs/`
 
 ## Remote verification
@@ -118,6 +163,8 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
 - The downloaded 26.2 release JAR was substituted into the independent server;
   Loader and Mixin initialized cleanly, the spear case produced `16.0 / 16.0`,
   and the server exited normally.
+- v1.2.0 matrix CI, tagged release, public checksum verification, and
+  downloaded-release runtime smoke are pending.
 - Carpet PR CI is `action_required` with no jobs because a maintainer must
   approve workflows from this first-time fork. This is an external approval
   gate, not a failed build.

@@ -15,6 +15,36 @@ def targets = [
                 carpetRequirement: ">=1.4.194 <1.4.195",
                 mixinCompatibility: "JAVA_21"
         ],
+        mc26_1: [
+                minecraft: "26.1",
+                loader: "0.18.4",
+                carpet: "26.1",
+                java: 25,
+                mappings: false,
+                minecraftRequirement: "26.1",
+                carpetRequirement: "26.1",
+                mixinCompatibility: "JAVA_17"
+        ],
+        mc26_1_1: [
+                minecraft: "26.1.1",
+                loader: "0.18.4",
+                carpet: "26.1",
+                java: 25,
+                mappings: false,
+                minecraftRequirement: "26.1.1",
+                carpetRequirement: "26.1",
+                mixinCompatibility: "JAVA_17"
+        ],
+        mc26_1_2: [
+                minecraft: "26.1.2",
+                loader: "0.18.4",
+                carpet: "26.1",
+                java: 25,
+                mappings: false,
+                minecraftRequirement: "26.1.2",
+                carpetRequirement: "26.1",
+                mixinCompatibility: "JAVA_17"
+        ],
         mc26_2: [
                 minecraft: "26.2",
                 loader: "0.19.3",

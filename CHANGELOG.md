@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 - 2026-07-10
+
+- Add exact artifacts for Minecraft 26.1, 26.1.1, and 26.1.2 with Fabric
+  Carpet 26.1 and Java 25.
+- Support Fabric Loader 0.18.4 or newer on the 26.1 release line.
+- Keep the 1.21.11 and 26.2 artifacts in the same release.
+- Validate all five artifacts and their embedded runtime contracts before
+  tagged publication.
+
 ## 1.1.0 - 2026-07-10
 
 - Add a dedicated Minecraft 26.2 / Fabric Carpet 26.2 / Java 25 artifact.
