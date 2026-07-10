@@ -9,33 +9,36 @@ own the long-term fix after upstream acceptance.
 
 ## 当前状态
 
-Implementation, local builds, baseline comparison, development runtime smoke,
-production-JAR runtime smoke, patch publication, and upstream PR submission are
-complete. The patch CI is green. Upstream CI is waiting for a Carpet maintainer
-to approve the first-time fork workflow.
+The 1.21.11 release, baseline comparison, full runtime regression, and upstream
+PR are complete. The shared-source 26.2 target builds successfully and its
+production JAR passes a dedicated-server multi-target smoke test. CI and the
+v1.1.0 dual-artifact publication are the remaining release steps. Upstream CI
+is waiting for a Carpet maintainer to approve the first-time fork workflow.
 
 ## 下一步
 
-Track PR #2209 for workflow approval and maintainer review. If requested, move
-the accepted change to maintained release branches and retire this patch after
-an upstream release.
+Publish v1.1.0 with separate 1.21.11 and 26.2 JARs, verify both release assets
+and checksums, then track PR #2209 for workflow approval and maintainer review.
+Retire each patch artifact after an equivalent Carpet release exists.
 
 ## P0
 
-- Build a Minecraft 1.21.11 server-side patch for Carpet 1.4.194.
+- Build server-side patches for Minecraft 1.21.11 / Carpet 1.4.194 and
+  Minecraft 26.2 / Carpet 26.2.
 - Delegate piercing attacks to vanilla STAB with client-equivalent cooldown.
-- Prove multi-target damage and normal attack regressions on a runtime server.
+- Prove multi-target damage on production-form runtime servers and retain the
+  full 1.21.11 regression matrix.
 - Submit the equivalent source fix to Fabric Carpet master.
 
 ## P1
 
-- Publish a reproducible JAR and validation evidence.
+- Publish reproducible, version-specific JARs and validation evidence.
 - Link the upstream PR to issues #2150 and #2163.
 
 ## P2
 
-- Backport or build additional patch artifacts only if maintainers do not ship
-  the fix for supported releases.
+- Build any additional version artifacts only if maintainers do not ship the
+  fix for those releases.
 
 ## Acceptance criteria
 
@@ -44,6 +47,7 @@ an upstream release.
 - Normal weapons and block breaking retain Carpet behavior.
 - `continuous` does not repeat Jab.
 - Local builds and GitHub CI pass.
+- Release metadata prevents either JAR from loading on the other target.
 
 ## Non-goals
 
@@ -55,3 +59,5 @@ an upstream release.
 
 - Validation: `../validation/2026-07-10-carpet-spear-fix.md`
 - Publication and PR: `../execution/2026-07-10-upstream-pr.md`
+- Minecraft 26.2 release: `../execution/2026-07-10-minecraft-26-2-release.md`
+- Artifact architecture: `../decisions/2026-07-10-dual-version-artifacts.md`

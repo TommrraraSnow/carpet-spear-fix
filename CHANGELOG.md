@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 - 2026-07-10
+
+- Add a dedicated Minecraft 26.2 / Fabric Carpet 26.2 / Java 25 artifact.
+- Keep the Minecraft 1.21.11 artifact available from the same release.
+- Share one behavior implementation while using the correct mapped or
+  non-remapped Loom pipeline for each Minecraft version.
+- Publish version-specific binaries and `SHA256SUMS` from tagged CI builds.
+
 ## 1.0.0 - 2026-07-10
 
 - Restore vanilla piercing Jab behavior for Carpet-controlled players.
