@@ -73,5 +73,6 @@ v1.0.0 and v1.1.0 remain unchanged.
 
 ## Follow-up
 
-Continue tracking upstream PR #2209 and retire each matching patch artifact
-after Carpet publishes an equivalent release fix.
+Retain the patch artifacts while the correct upstream implementation is
+reconsidered, then retire each one after Carpet publishes an equivalent release
+fix.

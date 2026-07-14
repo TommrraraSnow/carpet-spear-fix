@@ -18,6 +18,8 @@ source change.
    `fix/piercing-weapon-player-attack`.
 4. Opened pull request #2209 against Carpet master, linking #2150 and #2163.
 5. Verified patch CI and inspected the upstream workflow gate.
+6. Closed PR #2209 on 2026-07-14 after determining that the submitted approach
+   was not a correct upstream fix, and left that reason on the PR.
 
 ## Result
 
@@ -28,14 +30,17 @@ source change.
 - Release JAR SHA-256:
   `9ca105635881c2177be5ee9aa564a4aaeaa6097f3c191df5f64172f1123aaaa8`
 - Patch CI: success, run `29079261278`
-- Upstream PR: `https://github.com/gnembon/fabric-carpet/pull/2209`
-- Upstream PR CI: `action_required`; a maintainer must approve the forked
-  workflow before jobs can start.
+- Upstream PR: closed,
+  `https://github.com/gnembon/fabric-carpet/pull/2209`
+- Closure comment:
+  `https://github.com/gnembon/fabric-carpet/pull/2209#issuecomment-4966411047`
 
 ## Rollback
 
-Delete the patch release or close the PR; local source branches remain intact.
+The upstream PR is closed. Patch releases remain available and can still be
+removed independently without data migration.
 
 ## Follow-up
 
-Track maintainer feedback and retire the patch after an upstream release.
+Reconsider the upstream implementation before opening a replacement PR. Retire
+the patch after a correct upstream release exists.

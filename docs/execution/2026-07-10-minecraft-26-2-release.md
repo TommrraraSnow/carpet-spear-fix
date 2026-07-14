@@ -50,5 +50,5 @@ release remains available for the original 1.21.11 deployment.
 
 ## Follow-up
 
-Track upstream PR #2209 and retire the matching patch artifact once Carpet
-publishes an equivalent fix for that release line.
+Retain the patch while the correct upstream implementation is reconsidered,
+then retire it once Carpet publishes an equivalent fix for that release line.

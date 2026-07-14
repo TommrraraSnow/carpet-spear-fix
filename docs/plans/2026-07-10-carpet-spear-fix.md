@@ -15,13 +15,14 @@ behavior source. Exact 26.1, 26.1.1, and 26.1.2 targets now build locally with
 their verified Loader, Java, namespace, Carpet, and bytecode contracts. Release
 v1.2.0 publishes all five exact artifacts; matrix CI, public checksums,
 downloaded metadata, and the downloaded 26.1.2 runtime smoke pass. Upstream PR
-#2209 is open, and its CI is waiting for a Carpet maintainer to approve the
-first-time fork workflow.
+#2209 was closed on 2026-07-14 because the submitted approach was not a correct
+upstream fix. No replacement upstream implementation is currently active.
 
 ## 下一步
 
-Continue tracking PR #2209 for workflow approval and maintainer review. Retire
-each patch artifact after an equivalent Carpet release exists.
+Keep the patch artifacts available while the correct upstream implementation
+is reconsidered. Retire each artifact after an equivalent Carpet release
+exists.
 
 ## P0
 
@@ -31,7 +32,8 @@ each patch artifact after an equivalent Carpet release exists.
 - Delegate piercing attacks to vanilla STAB with client-equivalent cooldown.
 - Prove multi-target damage on production-form runtime servers and retain the
   full 1.21.11 regression matrix.
-- Submit the equivalent source fix to Fabric Carpet master.
+- Re-evaluate the correct Fabric Carpet implementation before submitting a
+  replacement upstream change.
 
 ## P1
 
