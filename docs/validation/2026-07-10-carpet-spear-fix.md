@@ -183,9 +183,8 @@ remain covered by the full 1.21.11 matrix and the shared behavior source.
   (26.2).
 - The downloaded 26.1.2 JAR loaded with the exact Loader 0.18.4 contract,
   produced `16.0 / 16.0`, and stopped cleanly with exit status 0.
-- Carpet PR CI is `action_required` with no jobs because a maintainer must
-  approve workflows from this first-time fork. This is an external approval
-  gate, not a failed build.
+- Carpet PR #2209 was closed on 2026-07-14 because the submitted implementation
+  was not a correct upstream fix. Its first-time-fork workflow never ran.
 
 ## Remaining risk
 

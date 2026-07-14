@@ -53,8 +53,8 @@ be built with `./gradlew :mc1_21_11:build` on JDK 21 or its corresponding
 
 ## Upstream
 
-The equivalent source fix is proposed in
-[Fabric Carpet PR #2209](https://github.com/gnembon/fabric-carpet/pull/2209).
-That PR targets Carpet's development branch and does not change the already
-published Carpet 26.1 or 26.2 JARs. This repository remains narrowly scoped as
-an installable bridge for the declared releases.
+An earlier upstream attempt in
+[Fabric Carpet PR #2209](https://github.com/gnembon/fabric-carpet/pull/2209)
+was closed because that approach was not a correct upstream fix. This
+repository remains narrowly scoped as an installable bridge for the declared
+releases while the upstream implementation is reconsidered.
